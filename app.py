@@ -108,4 +108,8 @@ class PalworldRCON:
             time.sleep(1)
     
 if __name__ == '__main__':
-    PalworldRCON()
+    try:
+        PalworldRCON()
+    except KeyboardInterrupt:
+        logging.info("Exiting due to KeyboardInterrupt (e.g. STRG+C)")
+        quit()
