@@ -1,3 +1,4 @@
+from core.callbacks import Callbacks
 import logging
 from mcrcon import MCRcon
 import schedule
@@ -12,6 +13,7 @@ class PalworldRCON:
         """
         self._set_logging()
         self._load_config()
+        self.callbacks = Callbacks()
         self._create_schedules()
         self.loop()
 
@@ -50,39 +52,50 @@ class PalworldRCON:
             }
             # iterate through all commands
             for command in server['schedules']:
-                chain = getattr(schedule, "every")
-                for attribute, value in command["every"][0].items():
-                    if isinstance(value, list) and 'at' in value[0]:
-                        # run function e.g. "day"
-                        chain = getattr(chain(), attribute)
-                        # run function "at"
-                        if isinstance(value[0]["at"], list):
-                            chain = getattr(chain, "at")(*value[0]["at"])
+                for entry in command["every"]:
+                    chain = getattr(schedule, "every")
+                    for attribute, value in entry.items():
+                        if isinstance(value, list) and 'at' in value[0]:
+                            # run function e.g. "day"
+                            chain = getattr(chain(), attribute)
+                            # run function "at"
+                            if isinstance(value[0]["at"], list):
+                                chain = getattr(chain, "at")(*value[0]["at"])
+                            else:
+                                chain = getattr(chain, "at")(str(value[0]["at"]))
                         else:
-                            chain = getattr(chain, "at")(str(value[0]["at"]))
-                    else:
-                        chain = getattr(chain(value if value else None), attribute)
-                # start schedule
-                chain.do(
-                    self.run_command,
-                    config=server_config,
-                    command=command["command"],
-                    arguments=command["arguments"] if "arguments" in command else None
-                )
+                            chain = getattr(chain(value if value else None), attribute)
+                    # start schedule
+                    chain.do(
+                        self.run_command,
+                        config=server_config,
+                        command=command["command"],
+                        arguments=command["arguments"] if "arguments" in command else None,
+                        callback=command["callback"] if "callback" in command else None
+                    )
 
-    def run_command(self, config, command, arguments):
+    def run_command(self, config, command, arguments, callback):
         """connects to the palworld server and executes a command
 
         Args:
             config (dict): configuration data to connect to the server
             command (string): the command to run
             arguments (string): the arguments to add to the command
+            callback (string): the callback to run if exists
         """
         logging.info("running command {} with parameter {}".format(command, arguments))
         try:
             with MCRcon(host=config["ip"], port=config["port"], password=config["password"], timeout=5) as con:
-                response = con.command('ShowPlayers')
-                print(response)
+                if arguments:
+                    response = con.command(command + " " + arguments)
+                else:
+                    response = con.command(command)
+                if callback:
+                    if hasattr(self.callbacks, callback):
+                        func = getattr(self.callbacks, callback)
+                        func(con, response)
+                else:
+                    logging.info(response.replace("\n",""))
         except BaseException as e:
             logging.error(f"could not run command: {e}")
 
