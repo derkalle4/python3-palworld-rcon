@@ -1,0 +1,14 @@
+[Unit]
+Description=Palworld RCON Service
+After=network.target
+
+[Service]
+Type=simple
+User=palworld
+Group=palworld
+WorkingDirectory=/home/palworld/python3-palworld-rcon
+ExecStart=/home/palworld/python3-palworld-rcon/run_in_venv.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
