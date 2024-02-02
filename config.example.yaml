@@ -1,0 +1,17 @@
+gameserver:
+  - ip: 127.0.0.1
+    query_port: 25575
+    rcon_password: yoursecurepasswordhere
+    schedules:
+      # info command
+      - command: Info
+        # arguments: ""
+        every:
+          - day:
+            - at:
+              - "21:37"
+              - "Europe/Berlin"
+      - command: Info
+        # arguments: ""
+        every:
+          - seconds: 3

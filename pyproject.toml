@@ -1,0 +1,33 @@
+[project]
+
+name = "Palworld-RCON"
+version = "0.0.1"
+description = "Connects to a palworld server and runs commands at a given time"
+readme = "README.md"
+requires-python = ">=3.7"
+license = {file = "LICENSE"}
+keywords = ["palworld", "rcon", "cronjob", "kandru"]
+authors = [
+  {name = "Kalle Minkner", email = "info@kalleminkner.de" }
+]
+maintainers = [
+  {name = "Kalle Minkner", email = "info@kalleminkner.de" }
+]
+dependencies = [
+  "mcrcon",
+  "pyyaml",
+  "schedule",
+  "pytz"
+]
+
+[project.urls]
+
+"Homepage" = "https://kandru.net"
+"Source" = "https://github.com/derkalle4/python3-palworld-rcon"
+
+[build-system]
+requires = ["setuptools>=43.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = []
