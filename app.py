@@ -82,7 +82,7 @@ class PalworldRCON:
             arguments (string): the arguments to add to the command
             callback (string): the callback to run if exists
         """
-        logging.info("running command {} with parameter {}".format(command, arguments))
+        logging.debug("running command {} with parameter {}".format(command, arguments))
         try:
             with MCRcon(host=config["ip"], port=config["port"], password=config["password"], timeout=5) as con:
                 if arguments:
