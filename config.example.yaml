@@ -115,7 +115,7 @@ gameserver:
       ###
       # welcome new players
       - command: ShowPlayers
-        callback: announce_player
+        callback: playerstatus.announce_player
         every:
           - seconds: 5
       ###

@@ -1,7 +1,7 @@
 import logging
 
 
-class Callbacks:
+class Playerstatus:
     _player_list={}
     _player_list_initialized=False
 

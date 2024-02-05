@@ -1,6 +1,6 @@
-from core.callbacks import Callbacks
 import logging
 from mcrcon import MCRcon
+from pydoc import locate
 import schedule
 import time
 import yaml
@@ -13,7 +13,6 @@ class PalworldRCON:
         """
         self._set_logging()
         self._load_config()
-        self.callbacks = Callbacks()
         self._create_schedules()
         self.loop()
 
@@ -91,9 +90,20 @@ class PalworldRCON:
                 else:
                     response = con.command(command)
                 if callback:
-                    if hasattr(self.callbacks, callback):
-                        func = getattr(self.callbacks, callback)
-                        func(con, response)
+                    try:
+                        cb_split = callback.split(".")
+                        if len(cb_split) == 2:
+                            # try to load class (from plugins.test import Test)
+                            module = locate(f"plugins." + str(cb_split[0]).lower() + "." + str(cb_split[0]).lower().capitalize())
+                            # load plugin
+                            module = module()
+                            # check if plugin has the given function
+                            if hasattr(module, cb_split[1]):
+                                # run the function
+                                func = getattr(module, cb_split[1])
+                                func(con, response)
+                    except BaseException as e:
+                        logging.error(f"could not load module {callback}: {e}")
                 else:
                     logging.info(response.replace("\n",""))
         except BaseException as e:
