@@ -6,6 +6,7 @@ import time
 import yaml
 
 class PalworldRCON:
+    callbacks = {}
     config = None
 
     def __init__(self):
@@ -96,10 +97,14 @@ class PalworldRCON:
                     try:
                         cb_split = callback.split(".")
                         if len(cb_split) == 2:
-                            # try to load class (from plugins.test import Test)
-                            module = locate(f"plugins." + str(cb_split[0]).lower() + "." + str(cb_split[0]).lower().capitalize())
-                            # load plugin
-                            module = module()
+                            # check if class got loaded already
+                            if str(cb_split[0]).lower() + "." + str(cb_split[0]).lower().capitalize() in self.callbacks:
+                                module = self.callbacks[str(cb_split[0]).lower() + "." + str(cb_split[0]).lower().capitalize()]
+                            else:
+                                # try to load class (from plugins.test import Test)
+                                module = locate(f"plugins." + str(cb_split[0]).lower() + "." + str(cb_split[0]).lower().capitalize())
+                                # load plugin
+                                module = module()
                             # check if plugin has the given function
                             if hasattr(module, cb_split[1]):
                                 # run the function
