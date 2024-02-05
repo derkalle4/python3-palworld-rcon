@@ -8,7 +8,7 @@ gameserver:
       ###
       # cronjob 4:00 - server update
       - command: broadcast
-        arguments: "Attention:_Daily_Server_Update_At_4am_-_Possible_Restart!"
+        arguments: "Attention:_Daily_Server_Update_Check_At_4am!"
         every:
           - day:
             - at:
@@ -39,7 +39,7 @@ gameserver:
               - "Europe/Berlin"
       # cronjob 13:00 - server update
       - command: broadcast
-        arguments: "Attention:_Daily_Server_Update_At_1pm_-_Possible_Restart!"
+        arguments: "Attention:_Daily_Server_Update_Check_At_1pm!"
         every:
           - day:
             - at:
@@ -51,7 +51,7 @@ gameserver:
               - "Europe/Berlin"
           - day:
             - at:
-              - "21:57"
+              - "12:57"
               - "Europe/Berlin"
           - day:
             - at:
@@ -71,45 +71,6 @@ gameserver:
       ###
       # SCHEDULES FOR SERVER RESTARTS
       ###
-      # cronjob 06:00 - server restart
-      - command: broadcast
-        arguments: "Attention:_Automated_Server_Restart_At_6am_incoming!"
-        every:
-          - day:
-            - at:
-              - "05:55"
-              - "Europe/Berlin"
-          - day:
-            - at:
-              - "05:56"
-              - "Europe/Berlin"
-          - day:
-            - at:
-              - "05:57"
-              - "Europe/Berlin"
-          - day:
-            - at:
-              - "05:58"
-              - "Europe/Berlin"
-          - day:
-            - at:
-              - "05:59"
-              - "Europe/Berlin"
-      # shutdown the game with the internal timer first to avoid corrupt save games
-      - command: Shutdown
-        arguments: "55 Server_Reboot_In_55_Seconds!"
-        every:
-          - day:
-            - at:
-              - "05:59"
-              - "Europe/Berlin"
-      # save game
-      - command: Save
-        every:
-          - day:
-            - at:
-              - "05:59"
-              - "Europe/Berlin"
       # cronjob 12:00 - server restart
       - command: broadcast
         arguments: "Attention:_Automated_Server_Restart_At_12am_incoming!"
@@ -149,45 +110,6 @@ gameserver:
             - at:
               - "11:59"
               - "Europe/Berlin"
-      # cronjob 18:00 - server restart
-      - command: broadcast
-        arguments: "Attention:_Automated_Server_Restart_At_6pm_incoming!"
-        every:
-          - day:
-            - at:
-              - "17:55"
-              - "Europe/Berlin"
-          - day:
-            - at:
-              - "17:56"
-              - "Europe/Berlin"
-          - day:
-            - at:
-              - "17:57"
-              - "Europe/Berlin"
-          - day:
-            - at:
-              - "17:58"
-              - "Europe/Berlin"
-          - day:
-            - at:
-              - "17:59"
-              - "Europe/Berlin"
-      # save game
-      - command: Save
-        every:
-          - day:
-            - at:
-              - "17:59"
-              - "Europe/Berlin"
-      # shutdown the game with the internal timer first to avoid corrupt save games
-      - command: Shutdown
-        arguments: "55 Server_Reboot_In_55_Seconds!"
-        every:
-          - day:
-            - at:
-              - "17:59"
-              - "Europe/Berlin"
       ###
       # CUSTOM FUNCTIONS
       ###
@@ -199,13 +121,19 @@ gameserver:
       ###
       # ANNOUNCEMENTS
       ###
-      # announcement every hour (e.g. 12:30, 13:30, 14:30,...)
+      # announcement every hour (e.g. 12:15, 13:15, 14:15,...)
       - command: broadcast
-        arguments: "Info:_Regular_Restarts:_6am_12am_6pm_For_Performance_Reasons!"
+        arguments: "Info:_Regular_Restarts:_12am_For_Performance_Reasons!"
         every:
           - hour:
-            - at: ":30"
-      # announcement every hour (e.g. 12:15, 13:15, 14:15,...)
+            - at: ":15"
+      # announcement every hour (e.g. 12:16, 13:16, 14:16,...)
+      - command: broadcast
+        arguments: "Info:_Update_Checks:_4am_and_1pm_Every_Day!"
+        every:
+          - hour:
+            - at: ":16"
+      # announcement every hour (e.g. 12:30, 13:30, 14:30,...)
       - command: broadcast
         arguments: "Visit_palworld.party_And_Join_Our_Discord_:)"
         every:
