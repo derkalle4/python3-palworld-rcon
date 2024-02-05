@@ -21,7 +21,9 @@ class Callbacks:
                     cmd = con.command('broadcast ' + "{} has joined the server :)".format(
                         self._player_list[player]['name']
                     ).replace(' ', '_'))
-                    logging.info(cmd.replace("\n",""))
+                    logging.info(f"connected: {self._player_list[player]['name']} - {self._player_list[player]['playeruid']} - {self._player_list[player]['steamid']}")
+                else:
+                    logging.info(f"currently online: {self._player_list[player]['name']} - {self._player_list[player]['playeruid']} - {self._player_list[player]['steamid']}")
         # check for players that have left our server
         for player in self._player_list.copy():
             if not player in new_player_list:
@@ -29,7 +31,7 @@ class Callbacks:
                     cmd = con.command('broadcast ' + "{} has left the server ...".format(
                         self._player_list[player]['name']
                     ).replace(' ', '_'))
-                    logging.info(cmd.replace("\n",""))
+                    logging.info(f"disconnected: {self._player_list[player]['name']} - {self._player_list[player]['playeruid']} - {self._player_list[player]['steamid']}")
                 del self._player_list[player]
         if not self._player_list_initialized:
             self._player_list_initialized = True
