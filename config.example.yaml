@@ -1,3 +1,5 @@
+app:
+  log_level: info
 gameserver:
   - ip: 127.0.0.1
     query_port: 25575

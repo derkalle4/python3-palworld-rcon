@@ -11,16 +11,21 @@ class PalworldRCON:
     def __init__(self):
         """initialize class
         """
-        self._set_logging()
         self._load_config()
+        self._set_logging()
         self._create_schedules()
         self.loop()
 
     def _set_logging(self):
         """set basic logging
         """
+        if "app" in self.config and "log_level" in self.config["app"]:
+            if hasattr(logging, str(self.config["app"]["log_level"]).upper()):
+                level = getattr(logging, str(self.config["app"]["log_level"]).upper())
+        else:
+            level = logging.DEBUG
         logging.basicConfig(
-            level=logging.INFO,
+            level=level,
             format="%(asctime)s :: %(levelname)s :: %(name)s :: %(message)s",
             datefmt="%d.%m.%Y %H:%M:%S",
             handlers=[logging.StreamHandler()],
@@ -29,7 +34,6 @@ class PalworldRCON:
     def _load_config(self):
         """load yaml config
         """
-        logging.info(f"loading config file")
         try:
             with open("./config.yaml", "r") as file:
                 self.config = yaml.safe_load(file)
@@ -40,8 +44,7 @@ class PalworldRCON:
     def _create_schedules(self):
         """iterate through the config file and create all schedules to run
         """
-        for server in self.config:
-            server = self.config[server][0]
+        for server in self.config["gameserver"]:
             logging.info(f"create schedules for {server['ip']}:{server['query_port']}")
             # config to pass to each schedule
             server_config = {
