@@ -13,6 +13,10 @@ class HttpHandler(BaseHTTPRequestHandler):
         # init base class stuff
         super().__init__(*args, **kwargs)
 
+    def log_message(self, format, *args):
+        # Override to prevent logging
+        pass
+
     def _set_headers(self):
         self.send_response(200)
         self.send_header('Content-type', 'application/json')
@@ -36,7 +40,6 @@ class HttpHandler(BaseHTTPRequestHandler):
                 search_func = re.sub(r'[^a-zA-Z0-9]', '', path_split[2])
         if search_class in self.callbacks:
             attribute = f"_web_{search_func}"
-            print(attribute)
             if hasattr(self.callbacks[search_class], attribute):
                 func = getattr(self.callbacks[search_class], attribute)
                 response = func()
