@@ -36,6 +36,14 @@ class Playerstatus:
         if not self._player_list_initialized:
             self._player_list_initialized = True
 
+    def _web_index(self):
+        """returns the player status to the web endpoint
+        """
+        return {
+            'online_players': len(self._player_list),
+            'players': {key: value['name'] for key, value in self._player_list.items() if 'name' in value}
+        }
+
     def _palworld_extract_playerlist(self, response):
         """extracts players from the showplayers response
 

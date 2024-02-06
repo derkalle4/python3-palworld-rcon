@@ -1,3 +1,5 @@
+web:
+  port: 8214
 app:
   log_level: info
 gameserver:

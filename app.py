@@ -1,3 +1,4 @@
+from core.webserver import Webserver
 import logging
 from mcrcon import MCRcon
 from pydoc import locate
@@ -14,6 +15,7 @@ class PalworldRCON:
         """
         self._load_config()
         self._set_logging()
+        self._run_webserver()
         self._create_schedules()
         self.loop()
 
@@ -77,6 +79,15 @@ class PalworldRCON:
                         callback=command["callback"] if "callback" in command else None
                     )
 
+    def _run_webserver(self):
+        """runs the webserver
+        """
+        web = Webserver(
+            config=self.config,
+            callbacks=self.callbacks
+        )
+        web.run()
+
     def run_command(self, config, command, arguments, callback):
         """connects to the palworld server and executes a command
 
@@ -98,13 +109,15 @@ class PalworldRCON:
                         cb_split = callback.split(".")
                         if len(cb_split) == 2:
                             # check if class got loaded already
-                            if str(cb_split[0]).lower() + "." + str(cb_split[0]).lower().capitalize() in self.callbacks:
-                                module = self.callbacks[str(cb_split[0]).lower() + "." + str(cb_split[0]).lower().capitalize()]
+                            if str(cb_split[0]).lower() in self.callbacks:
+                                module = self.callbacks[str(cb_split[0]).lower()]
                             else:
                                 # try to load class (from plugins.test import Test)
                                 module = locate(f"plugins." + str(cb_split[0]).lower() + "." + str(cb_split[0]).lower().capitalize())
                                 # load plugin
                                 module = module()
+                                # save module
+                                self.callbacks[str(cb_split[0]).lower()] = module
                             # check if plugin has the given function
                             if hasattr(module, cb_split[1]):
                                 # run the function
