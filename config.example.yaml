@@ -1,7 +1,7 @@
-web:
-  port: 8214
 app:
   log_level: info
+web:
+  port: 8214
 gameserver:
   - ip: 127.0.0.1
     query_port: 25575
